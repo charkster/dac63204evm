@@ -500,7 +500,7 @@ class DACx3204:
 			addr = self.ADDR_DAC_3_CMP_MODE_CONFIG
 		self.set_bits(addr=addr, offset=self.OFFSET_CMP_MODE, width=self.WIDTH_CMP_MODE, bit_value=enc_cmp_mode)
 	
-	def write_func_config(self, channel=0, enc_slew_rate=0, enc_code_step=0, slew_en=0, enc_func_config=0, enc_phase_sel=0, enc_brd_config=0, enc_sync_config=0, enc_clr_sel=0):
+	def write_func_config(self, channel=0, enc_slew_rate=0, enc_code_step=0, log_slew_en=0, enc_func_config=0, enc_phase_sel=0, enc_brd_config=0, enc_sync_config=0, enc_clr_sel=0):
 		if (channel == 0):
 			addr = self.ADDR_DAC_0_FUNC_CONFIG
 		elif (channel == 1):
@@ -511,7 +511,7 @@ class DACx3204:
 			addr = self.ADDR_DAC_3_FUNC_CONFIG
 		self.set_bits(addr=addr, offset=self.OFFSET_SLEW_RATE,   width=self.WIDTH_SLEW_RATE,   bit_value=enc_slew_rate)
 		self.set_bits(addr=addr, offset=self.OFFSET_CODE_STEP,   width=self.WIDTH_CODE_STEP,   bit_value=enc_code_step)
-		self.set_bits(addr=addr, offset=self.OFFSET_LOG_SLEW_EN, width=1,                      bit_value=slew_en)
+		self.set_bits(addr=addr, offset=self.OFFSET_LOG_SLEW_EN, width=1,                      bit_value=log_slew_en)
 		self.set_bits(addr=addr, offset=self.OFFSET_FUNC_CONFIG, width=self.WIDTH_FUNC_CONFIG, bit_value=enc_func_config)
 		self.set_bits(addr=addr, offset=self.OFFSET_PHASE_SEL,   width=self.WIDTH_PHASE_SEL,   bit_value=enc_phase_sel)
 		self.set_bits(addr=addr, offset=self.OFFSET_BRD_CONFIG,  width=1,                      bit_value=enc_brd_config)
@@ -529,7 +529,7 @@ class DACx3204:
 			addr = self.ADDR_DAC_3_DATA
 		self.set_bits(addr=addr, offset=self.OFFSET_DAC_DATA, width=self.WIDTH_DAC_DATA, bit_value=data)
 
-	def write_common_config_1(self, channel=0, iout_pdn=0, enc_vout_pdn=0):
+	def write_common_config_1(self, channel=0, iout_pdn=1, enc_vout_pdn=3): # POR values
 		addr = self.ADDR_COMMON_CONFIG
 		if (channel == 0):
 			self.set_bits(addr=addr, offset=self.OFFSET_IOUT_PDN_0, width=1, bit_value=iout_pdn)
@@ -551,6 +551,7 @@ class DACx3204:
 		self.set_bits(addr=addr, offset=self.OFFSET_WIN_LATCH_EN, width=1, bit_value=win_latch_en)
 	
 	def write_gpio_config(self, gpi_en=0, enc_gpi_config=0, gpi_ch0_sel=0, gpi_ch1_sel=0, gpi_ch2_sel=0, gpi_ch3_sel=0, enc_gpo_config=0, gpo_en=0, gf_en=0):
+		addr = self.ADDR_GPIO_CONFIG
 		self.set_bits(addr=addr, offset=self.OFFSET_GPI_EN,       width=1,                     bit_value=gpi_en)
 		self.set_bits(addr=addr, offset=self.OFFSET_GPI_CONFIG,   width=self.WIDTH_GPI_CONFIG, bit_value=enc_gpi_config)
 		self.set_bits(addr=addr, offset=self.OFFSET_GPI_CH_0_SEL, width=1,                     bit_value=gpi_ch0_sel)
@@ -560,4 +561,36 @@ class DACx3204:
 		self.set_bits(addr=addr, offset=self.OFFSET_GPO_CONFIG,   width=self.WIDTH_GPO_CONFIG, bit_value=enc_gpo_config)
 		self.set_bits(addr=addr, offset=self.OFFSET_GPO_EN,       width=1,                     bit_value=gpo_en)
 		self.set_bits(addr=addr, offset=self.OFFSET_GF_EN,        width=1,                     bit_value=gf_en)
-		
+	
+	def write_vout_gain(self, channel=0, enc_vout_gain=0):
+		if (channel == 0):
+			addr = self.ADDR_DAC_0_VOUT_CMP_CONFIG
+		elif (channel == 1):
+			addr = self.ADDR_DAC_1_VOUT_CMP_CONFIG
+		elif (channel == 2):
+			addr = self.ADDR_DAC_2_VOUT_CMP_CONFIG
+		elif (channel == 3):
+			addr = self.ADDR_DAC_3_VOUT_CMP_CONFIG
+		self.set_bits(addr=addr, offset=self.OFFSET_VOUT_GAIN, width=self.WIDTH_VOUT_GAIN, bit_value=enc_vout_gain)
+	
+	def start_function(self, channel=0):
+		if (channel == 0):
+			offset = self.OFFSET_START_FUNC_0
+		elif (channel == 1):
+			offset = self.OFFSET_START_FUNC_1
+		elif (channel == 2):
+			offset = self.OFFSET_START_FUNC_2
+		elif (channel == 3):
+			offset = self.OFFSET_START_FUNC_3
+		self.set_bits(addr=self.ADDR_COMMON_DAC_TRIG, offset=offset, width=1, bit_value=1)
+	
+	def stop_function(self, channel=0):
+		if (channel == 0):
+			offset = self.OFFSET_START_FUNC_0
+		elif (channel == 1):
+			offset = self.OFFSET_START_FUNC_1
+		elif (channel == 2):
+			offset = self.OFFSET_START_FUNC_2
+		elif (channel == 3):
+			offset = self.OFFSET_START_FUNC_3
+		self.set_bits(addr=self.ADDR_COMMON_DAC_TRIG, offset=offset, width=1, bit_value=0)
