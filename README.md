@@ -8,3 +8,5 @@ Who needs a logic analyzer or oscilloscope when you have **Python**?
 ![picture](https://github.com/charkster/dac63204evm/blob/main/dac63204evm_sawtooth_python.png)
 
 ![picture](https://github.com/charkster/dac63204evm/blob/main/dac63204evm_triangle_python.png)
+
+![picture](https://github.com/charkster/dac63204evm/blob/main/dac63204evm_sine_python.png)
