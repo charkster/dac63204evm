@@ -26,4 +26,5 @@ print("COMMON_CONFIG register is 0x{:04x}".format(dac.read_word(read_addr=dac.AD
 #time.sleep(5)
 dac.stop_function(channel=0)
 plt.plot(sample_list)
+plt.title('Sawtooth, Slew 239us, 1 LSB step')
 plt.show()
